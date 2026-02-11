@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "computer-use": {
+      "httpUrl": "http://localhost:8080",
+      "authProviderType": "none",
+      "description": "Computer automation tools: browser, bash, screenshot, text editor (NOT AN MCP SERVER - REST API ONLY)",
+      "enabled": false
+    },
+    "retail-data": {
+      "httpUrl": "https://m1qk67awy4.execute-api.us-west-2.amazonaws.com/prod/mcp_server",
+      "authProviderType": "none",
+      "description": "Retail data MCP server with a single universal dynamic tool `smart_query` for products, stores, inventory, and transactions (older helper tools remain internal for backward compatibility)",
+      "enabled": true
+    },
+    "skills": {
+      "httpUrl": "http://localhost:8082",
+      "authProviderType": "none",
+      "description": "Business skills: PDF report generation, sentiment analysis, competitive intelligence (NOT RUNNING)",
+      "enabled": false
+    }
+  }
+}

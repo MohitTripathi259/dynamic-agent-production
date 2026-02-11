@@ -1,0 +1,79 @@
+{
+  "family": "computer-use-agent",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "4096",
+  "executionRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/computerUseTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "computer-use-container",
+      "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/computer-use-container:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp",
+          "name": "api"
+        },
+        {
+          "containerPort": 5900,
+          "protocol": "tcp",
+          "name": "vnc"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DISPLAY",
+          "value": ":99"
+        },
+        {
+          "name": "ENABLE_VNC",
+          "value": "true"
+        }
+      ],
+      "linuxParameters": {
+        "initProcessEnabled": true
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8080/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/computer-use-agent",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [
+        {
+          "name": "nofile",
+          "softLimit": 65536,
+          "hardLimit": 65536
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "key": "Application",
+      "value": "computer-use-agent"
+    },
+    {
+      "key": "Environment",
+      "value": "trial"
+    }
+  ]
+}

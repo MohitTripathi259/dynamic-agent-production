@@ -1,0 +1,46 @@
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    xvfb \
+    x11vnc \
+    fluxbox \
+    chromium-browser \
+    scrot \
+    xdotool \
+    xterm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
+RUN pip3 install --no-cache-dir \
+    fastapi==0.115.0 \
+    uvicorn[standard]==0.32.0 \
+    pillow==10.4.0 \
+    pyautogui==0.9.54 \
+    mss==9.0.1 \
+    pydantic==2.9.0
+
+# Create app directory
+WORKDIR /app
+
+# Copy server code
+COPY computer_use_server.py .
+
+# Expose ports (8080 for API, 5900 for VNC)
+EXPOSE 8080 5900
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Start script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

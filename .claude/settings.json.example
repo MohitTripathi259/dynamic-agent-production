@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "computer-use": {
+      "httpUrl": "http://localhost:8080",
+      "enabled": true,
+      "description": "Official Anthropic computer use tools (screenshot, bash, browser, text_editor)"
+    },
+    "retail-data": {
+      "httpUrl": "http://localhost:8081",
+      "enabled": true,
+      "description": "Retail data access tools (7 tools for database queries)"
+    },
+    "skills": {
+      "httpUrl": "http://localhost:8082",
+      "enabled": true,
+      "description": "Legacy local skills (query_database, etc)"
+    }
+  },
+
+  "_comments": {
+    "note1": "This file configures MCP SERVERS only (HTTP endpoints)",
+    "note2": "S3 skills are NOT configured here - they use code parameters",
+    "note3": "Example S3 skills configuration in code:",
+    "example": "agent = DynamicAgent(api_key='...', load_s3_skills=True, s3_skills_bucket='cerebricks-studio-agent-skills', s3_skills_prefix='skills_phase3/')"
+  }
+}
